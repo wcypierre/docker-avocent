@@ -16,7 +16,7 @@ RUN apt-get update && \
     echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | tee /etc/apt/sources.list.d/zulu.list && \
     apt-get update
 
-RUN apt-get install default-jdk -y
+RUN apt-get install zulu8-jre -y
 
 RUN gcc -o /keycode-hack.so /keycode-hack.c -shared -s -ldl -fPIC && \
     apt-get remove -y gcc software-properties-common && \
