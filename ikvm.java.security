@@ -1,6 +1,6 @@
 #ikvm.java.security
 #Custom java.security overrides for Gigabyte IPMI KVM
 
-jdk.tls.disabledAlgorithms=TLSv1.1, DES, MD5withRSA, \
+jdk.tls.disabledAlgorithms=DES, MD5withRSA, \
     DH keySize < 1024, EC keySize < 224, 3DES_EDE_CBC, anon, NULL, \
     include jdk.disabled.namedCurves
