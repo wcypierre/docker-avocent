@@ -1,30 +1,35 @@
-# iDRAC 6 dockerized
-
-<img src="https://i.imgur.com/Sg6qYtT.png" alt="Web interface" width="100%" />
-
-*Web interface*
-
-<img src="https://i.imgur.com/LcD0q2a.png" alt="Guacamole" width="100%" />
-
-*Directly connected to VNC via Guacamole*
+# Avocent vKVM dockerized
 
 ## About
 
-Allows access to the iDRAC 6 console without installing Java or messing with Java Web Start. Java is only run inside of the container and access is provided via web interface or directly with VNC.
+This docker image is based on [zheng1/docker-avocent](https://github.com/zheng1/docker-avocent) and the original [DomiStyle/docker-idrac6](https://github.com/zheng1/docker-avocent) repo for dockerizing Dell idrac KVMs.
 
-Container is based on [baseimage-gui](https://github.com/jlesage/docker-baseimage-gui) by [jlesage](https://github.com/jlesage)
+This fork has been modified to work for Avocent KVM 4.1.1.54 that ships with **Avocent MergePoint EMS AST2300** on [Gigabyte GA-6PXSV4](https://www.gigabyte.com/Enterprise/Server-Motherboard/GA-6PXSV4-rev-10#Support-Firmware) motherboards, but will probably work for any mobo in that series.
+
+Modifications made to get this working:
+
+* [Original command modifications](https://github.com/DomiStyle/docker-idrac6/commit/96673ba3a02335120952fffaafd75300d964238f) made by [zheng1](https://github.com/zheng1) to get avocent client executing
+* Removing TLSv1.1 from disabled algorithms for java since this is what the avocent client uses
+* Add `user.home` java arg so certs have somewhere to download
+* Downgrading java to java 8 due to client using a deprecated/removed AWT function `java.lang.NoSuchMethodError: 'java.awt.peer.ComponentPeer java.awt.Window.getPeer()` that caused keyboard input to fail to work
+
+# Disclaimer
+
+Due to the above changes (outdated java, TLSv1.1 enabled) this **should only be used on internal, secured networks. Do not expose this container to the internet!** It is highly insecure and should only be used when the container and BMC platform are located an an internal network.
 
 # Usage
+
+`IDRAC_HOST` should be the IP address of the MergePoint EMS interface.
 
 See the docker-compose [here](https://github.com/DomiStyle/docker-idrac6/blob/master/docker-compose.yml) or use this command:
 ```
 docker run -d \
   -p 5800:5800 \
   -p 5900:5900 \
-  -e IDRAC_HOST=idrac1.example.org \
-  -e IDRAC_USER=root \
-  -e IDRAC_PASSWORD=1234 \
-  domistyle/idrac6
+  -e IDRAC_HOST=192.168.0.XXX \
+  -e IDRAC_USER=admin \
+  -e IDRAC_PASSWORD=password \
+  foxxmd/avocent-vkvm
 ```
 The web interface will be available on port 5800 while the VNC server can be accessed on 5900. Startup might take a few seconds while the Java libraries are downloaded. You can add a volume on /app if you would like to cache them.
 
@@ -32,7 +37,7 @@ The web interface will be available on port 5800 while the VNC server can be acc
 
 | Variable       | Description                                  | Required |
 |----------------|----------------------------------------------|----------|
-|`IDRAC_HOST`| Host for your iDRAC instance. Make sure your instance is reachable with https://<IDRAC_HOST>. See IDRAC_PORT for using custom ports. HTTPS is always used. | Yes |
+|`IDRAC_HOST`| IP address of the MergePoint EMS interface. Make sure your instance is reachable with https://<IDRAC_HOST>. See IDRAC_PORT for using custom ports. HTTPS is always used. | Yes |
 |`IDRAC_USER`| Username for your iDRAC instance. | Yes |
 |`IDRAC_PASSWORD`| Password for your iDRAC instance. | Yes |
 |`IDRAC_PORT`| The optional port for the web interface. (443 by default) | No |
@@ -53,12 +58,4 @@ Make sure the container user has read & write permission to these folders on the
 
 ## Issues & limitations
 
-* ~Libraries are not loaded correctly~
-  * ~Causes error message on start~
-  * ~"Pass all keystrokes to server", "Single Cursor" and "Virtual Media" is not available until fixed~
-* User preferences can't be saved
-* VNC starts with default 1024x768 resolution instead of fullscreen
-  * Use "View" -> "Full Screen" to work around this issue
-* Keyboard layout can't be changed
-* Only one iDRAC server can be accessed with a single instance
-  * Run multiple containers to work around this issue (e.g. srv1.idrac.example.org, srv2.idrac.example.org)
+[See original repository](https://github.com/DomiStyle/docker-idrac6#issues--limitations)

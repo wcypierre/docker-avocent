@@ -1,13 +1,13 @@
 FROM jlesage/baseimage-gui:debian-11
 
-ENV APP_NAME="iDRAC 6"  \
+ENV APP_NAME="Avocent vKVM"  \
     IDRAC_PORT=443      \
     DISPLAY_WIDTH=801   \
     DISPLAY_HEIGHT=621
 
 COPY keycode-hack.c /keycode-hack.c
 
-RUN APP_ICON_URL=https://raw.githubusercontent.com/DomiStyle/docker-idrac6/master/icon.png && \
+RUN APP_ICON_URL=https://raw.githubusercontent.com/FoxxMD/docker-avocent/master/avocent.png && \
     install_app_icon.sh "$APP_ICON_URL"
 
 RUN apt-get update && \
