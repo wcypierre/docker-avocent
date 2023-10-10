@@ -2,15 +2,15 @@ version: '3.1'
 
 services:
   idrac1:
-    image: domistyle/idrac6
+    image: foxxmd/avocent-vkvm
     restart: always
     ports:
       - 5800:5800
       - 5900:5900
     environment:
-      - IDRAC_HOST=idrac1.example.org
-      - IDRAC_USER=root
-      - IDRAC_PASSWORD=1234
+      - IDRAC_HOST=192.168.0.XXX
+      - IDRAC_USER=admin
+      - IDRAC_PASSWORD=password
     # Experimental! To directly mount an iso as iDRAC virtual media, 
     # uncomment the below and set to a filename that appears in /vmedia
       # - VIRTUAL_ISO=name_of_iso.iso
