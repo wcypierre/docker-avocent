@@ -1,4 +1,4 @@
-FROM jlesage/baseimage-gui:debian-11
+FROM jlesage/baseimage-gui:debian-11-v4
 
 ENV APP_NAME="Avocent vKVM"  \
     IDRAC_PORT=443      \
@@ -28,6 +28,7 @@ RUN mkdir /app && \
     chown ${USER_ID}:${GROUP_ID} /app
 
 COPY startapp.sh /startapp.sh
+RUN chmod +x /startapp.sh
 COPY mountiso.sh /mountiso.sh
 COPY ikvm.java.security /ikvm.java.security
 
