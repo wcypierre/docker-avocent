@@ -11,7 +11,7 @@ RUN APP_ICON_URL=https://raw.githubusercontent.com/FoxxMD/docker-avocent/master/
     install_app_icon.sh "$APP_ICON_URL"
 
 RUN apt-get update && \
-    apt-get install -y wget software-properties-common libx11-dev gcc xdotool gnupg ca-certificates curl && \
+    apt-get install -y wget software-properties-common libx11-dev gcc xdotool gnupg ca-certificates curl xorg && \
     curl -s https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | tee /etc/apt/sources.list.d/zulu.list && \
     apt-get update
